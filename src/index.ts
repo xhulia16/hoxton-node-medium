@@ -57,9 +57,9 @@ app.post('/posts', async (req, res) => {
 })
 
 app.post('/likes', async (req, res) => {
-    await prisma.likes.create({ data: req.body })
-    const posts = await prisma.post.findMany({ include: { author: true, likes: true, comments: { include: { user: true } } } })
-    res.send(posts)
+    const likedPost=await prisma.likes.create({ data: req.body })
+    const singlePost = await prisma.post.findUnique({ where: { id: likedPost.postId }, include: { author: true, likes: true, comments: { include: { user: true } } } })
+    res.send(singlePost)
 })
 
 app.post('/comments', async (req, res) => {
